@@ -1,0 +1,79 @@
+.auth {
+  min-height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.auth .img {
+  animation: slide-down 0.5s ease;
+}
+.auth .form {
+  width: 35rem;
+  padding: 1.5rem;
+  animation: slide-up 0.5s ease;
+  background-color: white;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  box-shadow: var(--box-shadow);
+  overflow: hidden;
+}
+.auth .form h2 {
+  color: var(--color-danger);
+  text-align: center;
+}
+.auth .form form .links {
+  display: flex;
+  justify-content: space-between;
+  margin: 5px 0;
+}
+.auth .form form .image-upload {
+  padding: 10px 0px;
+  padding-left: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  width: 50%;
+}
+.auth .form form .image-upload span {
+  color: var(--color-danger);
+  font-size: 1.5rem;
+  padding-left: 5px;
+}
+.auth .form form p {
+  text-align: center;
+  margin: 1rem;
+}
+.auth .form .register {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+}
+.auth .warning-text {
+  color: red;
+}
+.auth .hide {
+  display: none;
+}
+@keyframes slide-up {
+  0% {
+    transform: translateY(-5rem);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+@keyframes slide-down {
+  0% {
+    transform: translateY(5rem);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .img {
+    display: none;
+  }
+}/*# sourceMappingURL=auth.module.css.map */
