@@ -7,7 +7,7 @@ interface IInput {
   setProperty: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const Input = ({ value, setProperty, type, label }: IInput) => {
+const InputFieled = ({ value, setProperty, type, label }: IInput) => {
   return (
     <div className={style.group}>
       <input
@@ -25,4 +25,4 @@ const Input = ({ value, setProperty, type, label }: IInput) => {
   );
 };
 
-export default Input;
+export default InputFieled;

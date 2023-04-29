@@ -2,20 +2,45 @@ import { useState } from "react";
 import style from "./auth.module.scss";
 import { ToastContainer, toast } from "react-toastify";
 import Loader from "../../components/loader/Loader";
-import loginImg from "../../assets/login.jpg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaGoogle } from "react-icons/fa";
-import Input from "../../components/input/Input";
+import InputField from "../../components/inputField/InputField";
+import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { auth } from "../../firebase";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate()
 
+  const loginUser = (e:any) => {
+    e.preventDefault();
+    setLoading(true);
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredentials) => {
+        setLoading(false);
+        toast.success("Login Successful");
+        navigate("/")
+      })
+      .catch((error) => {
+        toast.error(error.message);
+        setLoading(false);
+      });
+  };
 
-  const loginUser = () => {};
-
-  const signInWithGoogle = () => {};
+  const provider = new GoogleAuthProvider();
+  const signInWithGoogle = () => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const user = result.user;
+        toast.success("Login Successful");
+        navigate("/")
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      });
+  };
 
   return (
     <>
@@ -26,14 +51,23 @@ const Login = () => {
         </div>
       )}
       <section className={`container ${style.auth}`}>
-
         <div className={style.form}>
           <h2>Login</h2>
           <form onSubmit={loginUser}>
             {/* {Email field} */}
-            <Input value={email} label="Email" type="email" setProperty={setEmail}/>
+            <InputField
+              value={email}
+              label="Email"
+              type="email"
+              setProperty={setEmail}
+            />
             {/* {Pasword field} */}
-            <Input value={password} label="Password" type="password" setProperty={setPassword}/>
+            <InputField
+              value={password}
+              label="Password"
+              type="password"
+              setProperty={setPassword}
+            />
 
             <button type="submit" className="--btn --btn-primary --btn-block">
               Login

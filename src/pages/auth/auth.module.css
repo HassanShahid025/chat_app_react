@@ -42,6 +42,7 @@
 .auth .form form p {
   text-align: center;
   margin: 1rem;
+  font-size: 1.5rem;
 }
 .auth .form .register {
   display: flex;
