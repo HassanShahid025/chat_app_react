@@ -33,6 +33,8 @@ const Search = () => {
     }
   };
 
+  
+
   const handleSelect = async (user: DocumentData) => {
      //check whether the group(chats in firestore) exists, if not create
      const combinedId =

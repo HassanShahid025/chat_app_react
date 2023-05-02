@@ -16,6 +16,7 @@ const Input = () => {
 
   const { currentUser } = useAuthContext()!;
   const { data } = useChatContext()!;
+  const date = new Date()
 
   const handleSend = async () => {
     if (img) {
@@ -56,13 +57,16 @@ const Input = () => {
         }
       );
 
-    } else if(text !== "") {
+    } 
+    
+    else if(text !== "") {
       await updateDoc(doc(db, "chats", data.chatId), {
         messages: arrayUnion({
           id: uuidv4(),
           text,
           senderId: currentUser.uid,
-          date: Timestamp.now(),
+          date: `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`,
+          time:`${date.getHours()}:${date.getMinutes()}`       
         }),
       });
     }
@@ -89,6 +93,8 @@ const Input = () => {
       handleSend();
     }
   };
+  
+ 
 
   return (
     <div className="input">

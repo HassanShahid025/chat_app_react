@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Message from "./Message";
 import { useChatContext } from "../Context/ChatContext";
-import { DocumentData, doc, onSnapshot } from "firebase/firestore";
+import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase";
 
 export const Messages = () => {
@@ -11,7 +11,7 @@ export const Messages = () => {
   useEffect(() => {
     if (data.chatId !== "") {
       const unSub = onSnapshot(doc(db, "chats", data.chatId), (doc) => {
-        doc.exists() && setMessages(doc.data().messages)
+        doc.exists() && setMessages(doc.data().messages);
       });
       return () => {
         unSub;
@@ -21,10 +21,18 @@ export const Messages = () => {
 
   return (
     <div className="messages">
-      {messages!.map((message:any) => {
+      {messages!.map((message: any, index) => {
+        let date = message.date;
         return (
-          <Message message={message} key={message.id}/>
-        )
+          <span key={message.id}>
+            <p className="date">
+              {index === 0
+                ? message.date
+                : messages[index - 1].date !== message.date ? message.date : null}
+            </p>
+            <Message message={message} />
+          </span>
+        );
       })}
     </div>
   );

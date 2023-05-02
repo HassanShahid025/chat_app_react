@@ -14,6 +14,7 @@ const Message = ({ message }: { message: any }) => {
     })
   },[message])
 
+
   return (
     <div className={`message ${message.senderId === currentUser.uid && "owner"}`} ref={ref}>
       <div className="messageInfo">
@@ -25,7 +26,7 @@ const Message = ({ message }: { message: any }) => {
           }
           alt=""
         />
-        <span>Just now</span>
+        <span>{message.time}</span>
       </div>
       <div className="messageContent">
         <p>{message.text}</p>
