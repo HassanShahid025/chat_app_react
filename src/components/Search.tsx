@@ -72,9 +72,11 @@ const Search = () => {
    setSearch("")
   };
 
+
   useEffect(() => {
     handleSearch();
   }, [search]);
+
 
   return (
     <div className="search">

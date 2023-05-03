@@ -25,11 +25,11 @@ export const Messages = () => {
         let date = message.date;
         return (
           <span key={message.id}>
-            <p className="date">
-              {index === 0
-                ? message.date
-                : messages[index - 1].date !== message.date ? message.date : null}
-            </p>
+              {/* <p className="date">
+                {index === 0
+                  ? message.date
+                  : messages[index - 1].date !== message.date ? message.date : null}
+              </p> */}
             <Message message={message} />
           </span>
         );
