@@ -3,6 +3,8 @@ import { useAuthContext } from "../Context/AuthContext";
 import { DocumentData, doc, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase";
 import { useChatContext } from "../Context/ChatContext";
+import userPic from "../assets/user.jpg"
+import Loader from "./loader/Loader";
 
 const Chats = () => {
   const [chats, setChats] = useState<DocumentData>({});
@@ -29,6 +31,7 @@ const Chats = () => {
 
   return (
     <div className="chats">
+      <Loader/>
       {Object.entries(chats).sort((a,b) => b[1].date - a[1].date).map((chat) => {
         return(
           <div
@@ -36,7 +39,8 @@ const Chats = () => {
           key={chat[0]}
           onClick={() => handleSelect(chat[1].userInfo)}
         >
-          <img src={chat[1].userInfo.photoURL} alt="" />
+          {chat[1].userInfo.photoURL ? <img src={chat[1].userInfo.photoURL} alt="" />  : <img src={userPic}/>}
+          
           <div className="userChatInfo">
             <span>{chat[1].userInfo.displayName}</span>
             <p>

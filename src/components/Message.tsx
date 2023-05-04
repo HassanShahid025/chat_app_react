@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { useAuthContext } from "../Context/AuthContext";
 import { useChatContext } from "../Context/ChatContext";
+import userPic from "../assets/user.jpg"
 
 const Message = ({ message }: { message: any }) => {
   const { currentUser } = useAuthContext()!;
@@ -21,8 +22,8 @@ const Message = ({ message }: { message: any }) => {
         <img
           src={
             message.senderId === currentUser.uid
-              ? currentUser.photoURL
-              : data.user.photoURL
+              ? currentUser.photoURL ? currentUser.photoURL : userPic
+              : data.user.photoURL ? data.user.photoURL : userPic
           }
           alt=""
         />

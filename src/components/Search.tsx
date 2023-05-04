@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import { db } from "../firebase";
 import useFetchCollection from "../customHooks/useFetchCollection";
 import { useAuthContext } from "../Context/AuthContext";
+import userPic from "../assets/user.jpg"
 
 const Search = () => {
   const [search, setSearch] = useState("");
@@ -96,7 +97,7 @@ const Search = () => {
               key={user.uid}
               onClick={() => handleSelect(user)}
             >
-              <img src={user.photoURL} alt="" />
+              <img src={user.photoURL ? user.photoURL : userPic} alt="" />
               <div className="userChatInfo">
                 <span>{user.displayName}</span>
               </div>

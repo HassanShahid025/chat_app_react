@@ -7,6 +7,8 @@ import { deleteObject, getDownloadURL, ref, uploadBytesResumable } from "firebas
 import { auth, db, storage } from "../firebase";
 import { updateProfile } from "firebase/auth";
 import { collection, doc, getDocs, query, updateDoc } from "firebase/firestore";
+import { toast } from "react-toastify";
+import Loader from "./loader/Loader";
 
 interface IChangePicture{
     setEditProfile: React.Dispatch<React.SetStateAction<boolean>>;
@@ -16,18 +18,25 @@ interface IChangePicture{
 
 export const ChangePicture = ({setEditProfile,editProfile,}:IChangePicture) => {
     const [docs ,setdocs] =  useState<any[]>([])
+    const [isLoading, setLoading] = useState(false)
     const { currentUser } = useAuthContext()!;
 
+
+    //Opening & closing of update Profile pic
     const handleEditProfile = () => {
         setEditProfile(!editProfile);
       }
 
+     //update pic in firestore userChats 
     const updatePicInUserChats = async(documentID:string,combinedId:string) => {
       await updateDoc(doc(db, "userChats",documentID), {
         [combinedId + ".userInfo.photoURL"]: currentUser.photoURL,
+      }).then(() => {
+        setLoading(false)
       });
      }
 
+     // update pic in firestore users and set docs array to userChats from firestore
      const handlePicFirebase = async()=>{
         await updateDoc(doc(db, "users",currentUser.uid), {
           photoURL: currentUser.photoURL,
@@ -42,6 +51,7 @@ export const ChangePicture = ({setEditProfile,editProfile,}:IChangePicture) => {
             setdocs(docsData);
         }
 
+        // search in docs to find current user who has changed his pic
         useEffect(() => {
           if(docs){
             for (const obj of docs) {
@@ -63,8 +73,10 @@ export const ChangePicture = ({setEditProfile,editProfile,}:IChangePicture) => {
           }
         },[docs])
       
-
+    
+    // handle file input, update user pic in storage
     const handlePicture = async(e: any) => {
+      setLoading(true)
         const img = e.target.files[0];
     
         const desertRef = ref(storage, currentUser.photoURL);
@@ -112,7 +124,7 @@ export const ChangePicture = ({setEditProfile,editProfile,}:IChangePicture) => {
                     handlePicFirebase()
                     // ...
                   }).catch((error) => {
-                    // An error occurred
+                      toast.error(error.message)
                     // ...
                   });
               
@@ -149,7 +161,9 @@ export const ChangePicture = ({setEditProfile,editProfile,}:IChangePicture) => {
           <p>Profile</p>
         </div>
         <div className="profile-info">
-          <div className="user-img">
+          <div className="user-img"> 
+              {isLoading && <Loader/>}
+            
             <label htmlFor="file" className="label">
               {currentUser.photoURL ? (
                 <img src={currentUser.photoURL} alt="" />
