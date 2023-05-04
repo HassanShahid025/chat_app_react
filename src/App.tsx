@@ -1,4 +1,3 @@
-//1:48:30
 import "./App.scss";
 import "react-toastify/dist/ReactToastify.css";
 import { Routes, Route, Navigate } from "react-router-dom";

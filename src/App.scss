@@ -20,6 +20,7 @@
   flex: 1;
   position: relative;
   background-color: #3e3c61;
+  overflow-y:auto;
   .profile {
     position: absolute;
     top: 0;
@@ -62,9 +63,9 @@
         justify-content: center;
         cursor: pointer;
         overflow: hidden;
-        img{
+        img {
           height: 19rem;
-        width: 19rem;
+          width: 19rem;
           object-fit: cover;
         }
         span {
@@ -81,7 +82,7 @@
           align-items: center;
           justify-content: center;
           gap: 10px;
-          p{
+          p {
             color: white;
             font-size: 1.3rem;
           }
@@ -153,6 +154,7 @@
       }
     }
   }
+
   .userChat {
     padding: 10px;
     display: flex;
@@ -205,7 +207,7 @@
     height: calc(100% - 101px);
     overflow: scroll;
     overflow-x: hidden;
-    .date{
+    .date {
       text-align: center;
       color: gray;
       font-size: 1.3rem;
@@ -219,7 +221,7 @@
         flex-direction: column;
         color: gray;
         font-weight: 300;
-        span{
+        span {
           text-align: center;
         }
         img {
@@ -230,16 +232,19 @@
         }
       }
       .messageContent {
-        max-width: 80%;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
+        max-width: 50%;
+          // display: flex;
+          // flex-direction: column;
+          // gap: 10px;
 
         p {
           background-color: white;
           padding: 10px 10px;
-          max-width: max-content;
+          max-width: 300px;
+          height: auto;
           border-radius: 0px 10px 10px 10px;
+          font-size: 1.3rem;
+          border: 2px solid paleturquoise;
         }
 
         img {

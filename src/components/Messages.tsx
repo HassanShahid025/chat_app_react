@@ -3,6 +3,7 @@ import Message from "./Message";
 import { useChatContext } from "../Context/ChatContext";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase";
+import Loader from "./loader/Loader";
 
 export const Messages = () => {
   const [messages, setMessages] = useState<any[]>([]);
@@ -19,18 +20,27 @@ export const Messages = () => {
     }
   }, [data.chatId]);
 
+  const date = new Date();
+  const todayDate = `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
+
   return (
     <div className="messages">
       {messages!.map((message: any, index) => {
         let date = message.date;
         return (
           <span key={message.id}>
-              {/* <p className="date">
-                {index === 0
-                  ? message.date
-                  : messages[index - 1].date !== message.date ? message.date : null}
-              </p> */}
-            <Message message={message} />
+            <p className="date">
+              {index === 0
+                ? message.date === todayDate
+                  ? "Today"
+                  : message.date
+                : messages[index - 1].date !== message.date
+                ? message.date === todayDate
+                  ? "Today"
+                  : message.date
+                : null}
+            </p>
+            {messages.length === 0 ? <Loader /> : <Message message={message} />}
           </span>
         );
       })}
