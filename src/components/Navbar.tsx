@@ -18,7 +18,6 @@ import { useChatContext } from "../Context/ChatContext";
 const Navbar = () => {
   const { currentUser } = useAuthContext()!;
   const [editProfile, setEditProfile] = useState(false);
-  const { data } = useChatContext()!;
 
   const handleEditProfile = () => {
     setEditProfile(!editProfile);
@@ -33,7 +32,7 @@ const Navbar = () => {
 deleteObject(desertRef).then(() => {
   // File deleted successfully
 }).catch((error) => {
-  // Uh-oh, an error occurred!
+  console.log(error.message)
 });
 
     try {
@@ -58,7 +57,7 @@ deleteObject(desertRef).then(() => {
           }
         },
         (error) => {
-          toast.error(error.message);
+          console.log(error.message);
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then(
@@ -80,16 +79,20 @@ deleteObject(desertRef).then(() => {
         }
       );
     } catch (error: any) {
-      toast.error(error.message);
+      console.log(error.message);
     }
   };
 
 
 const [docs ,setdocs] = useState<any[]>([])
 
-const updatePicInUserChats = async(documentID:string,combinedId:string) => {
+const updatePicInFireStore = async(documentID:string,combinedId:string) => {
   await updateDoc(doc(db, "userChats",documentID), {
     [combinedId + ".userInfo.photoURL"]: currentUser.photoURL,
+  });
+
+  await updateDoc(doc(db, "users",currentUser.uid), {
+    photoURL: currentUser.photoURL,
   });
 }
 
@@ -114,7 +117,7 @@ const updatePicInUserChats = async(documentID:string,combinedId:string) => {
           if(nestedKeys[0].includes(currentUser.uid)){
             for (const nestedKey of nestedKeys) {
               if(nestedObj[nestedKey].userInfo.uid === currentUser.uid){
-                updatePicInUserChats(keys[0],nestedKeys[0]) 
+                updatePicInFireStore(keys[0],nestedKeys[0]) 
               } ;
           }
           }
@@ -123,7 +126,7 @@ const updatePicInUserChats = async(documentID:string,combinedId:string) => {
       }
     }
 
-  },[auth.currentUser!.photoURL]) 
+  },[auth.currentUser?.photoURL]) 
 
   return (
     <>
