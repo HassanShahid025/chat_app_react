@@ -6,11 +6,13 @@ import { ChangePicture } from "./ChangePicture";
 import userPic from "../assets/user.jpg"
 import Notiflix from "notiflix";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import { useChatContext } from "../Context/ChatContext";
 
 
 const Navbar = () => {
   const { currentUser } = useAuthContext()!;
   const [editProfile, setEditProfile] = useState(false)
+
 
   const handleEditProfile = () => {
     setEditProfile(!editProfile);

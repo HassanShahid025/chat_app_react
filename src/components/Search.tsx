@@ -15,12 +15,14 @@ import { db } from "../firebase";
 import useFetchCollection from "../customHooks/useFetchCollection";
 import { useAuthContext } from "../Context/AuthContext";
 import userPic from "../assets/user.jpg"
+import { useChatContext } from "../Context/ChatContext";
 
 const Search = () => {
   const [search, setSearch] = useState("");
   const [users, setUsers] = useState<DocumentData[] | null>(null);
   const { currentUser } = useAuthContext()!;
   const { data } = useFetchCollection("users");
+  
 
   const handleSearch = () => {
     if (search !== "") {
@@ -80,7 +82,7 @@ const Search = () => {
 
 
   return (
-    <div className="search">
+    <div className="search" >
       <div className="searchForm">
         <input
           type="text"

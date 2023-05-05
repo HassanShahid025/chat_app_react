@@ -15,7 +15,8 @@ interface AppContextType {
 
 type actionType =
   | { type: "CHANGE_USER"; payload: DocumentData }
-  | { type: "REMOVE_ITEM"; payload: number };
+  | { type: "REMOVE_ITEM"; payload: number }
+  | { type: "CLEAR_USER" }
 
 const ChatContext = createContext<AppContextType | null>(null);
 
@@ -37,6 +38,11 @@ export const ChatProvider = ({ children }: any) => {
               ? currentUser.uid + action.payload.uid
               : action.payload.uid + currentUser.uid,
         };
+        case "CLEAR_USER":
+          return{
+            user: {},
+            chatId: ""
+          }
       default:
         return state;
     }
