@@ -151,7 +151,7 @@ export const ChangePicture = ({setEditProfile,editProfile,}:IChangePicture) => {
         style={{ display: "none" }}
       />
 
-      <div className={`profile ${editProfile ? "show" : ""}`}>
+      <div className={`profile ${editProfile ? "show" : ""}`} >
         <div className="profile-header">
           <BsArrowLeftShort
             size={40}

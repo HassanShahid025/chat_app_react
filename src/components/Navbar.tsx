@@ -5,6 +5,7 @@ import { useAuthContext } from "../Context/AuthContext";
 import { ChangePicture } from "./ChangePicture";
 import userPic from "../assets/user.jpg"
 import Notiflix from "notiflix";
+import { BsThreeDotsVertical } from "react-icons/bs";
 
 
 const Navbar = () => {
@@ -13,6 +14,7 @@ const Navbar = () => {
 
   const handleEditProfile = () => {
     setEditProfile(!editProfile);
+    
   };
 
   const logout = () => {
@@ -50,6 +52,7 @@ const Navbar = () => {
           <div className="user-info">
             <p>{currentUser.displayName}</p>
             <button onClick={logout}>Logout</button>
+            {/* <BsThreeDotsVertical className="setting" size={90}/> */}
           </div>
         </div>
       </div>
