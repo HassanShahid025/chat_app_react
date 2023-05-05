@@ -21,6 +21,7 @@
   position: relative;
   background-color: #3e3c61;
   overflow-y:auto;
+  overflow-x: hidden;
   .profile {
     position: absolute;
     top: 0;
@@ -233,18 +234,15 @@
       }
       .messageContent {
         max-width: 50%;
-          // display: flex;
-          // flex-direction: column;
-          // gap: 10px;
+          min-height: 40px;
+          overflow-wrap: break-word;
 
         p {
           background-color: white;
           padding: 10px 10px;
           max-width: 300px;
-          height: auto;
           border-radius: 0px 10px 10px 10px;
           font-size: 1.3rem;
-          border: 2px solid paleturquoise;
         }
 
         img {
@@ -265,23 +263,34 @@
     }
   }
   .input {
-    height: 50px;
+    min-height: 50px;
     background-color: white;
     padding: 10px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    input {
+    overflow-wrap: break-word;
+    .input-container{
       width: 100%;
-      border: none;
-      outline: none;
-      color: #2f2d52;
-      font-size: 18px;
-
-      &::placeholder {
-        color: lightgray;
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+      input {
+        width: 100%;
+        height: auto;
+        overflow-y: auto;
+        border: none;
+        outline: none;
+        color: #2f2d52;
+        font-size: 18px;
+        &::placeholder {
+          color: lightgray;
+        }
       }
+    
     }
+  
+   
     .send {
       display: flex;
       gap: 10px;

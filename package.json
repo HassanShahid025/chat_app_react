@@ -8,11 +8,11 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "prettier-watch": "onchange \"**/*\" -- prettier --write --ignore-unknown {{changed}}"
-
   },
   "dependencies": {
     "@types/uuid": "^9.0.1",
     "firebase": "^9.21.0",
+    "notiflix": "^3.2.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.8.0",

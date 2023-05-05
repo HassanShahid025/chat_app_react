@@ -17,6 +17,8 @@ const Input = () => {
   const { currentUser } = useAuthContext()!;
   const { data } = useChatContext()!;
   const date = new Date()
+  const currentHours = `${date.getHours().toLocaleString().length === 1 ? `0${date.getHours()}` : `${date.getHours()}`}`
+    let currentMinutes = `${date.getMinutes().toLocaleString().length === 1 ? `0${date.getMinutes()}` : `${date.getMinutes()}`}`
 
   const handleSend = async () => {
     if (img) {
@@ -66,7 +68,7 @@ const Input = () => {
           text,
           senderId: currentUser.uid,
           date: `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`,
-          time:`${date.getHours()}:${date.getMinutes()}`       
+          time:`${currentHours}:${currentMinutes}`       
         }),
       });
     }
@@ -98,13 +100,15 @@ const Input = () => {
 
   return (
     <div className="input">
-      <input
+     <div className="input-container">
+     <input
         type="text"
         placeholder="Type something..."
         value={text}
         onChange={(e) => setText(e.target.value)}
         onKeyDown={(e) => handleKeyPress(e)}
       />
+     </div>
       <div className="send">
         <input
           type="file"

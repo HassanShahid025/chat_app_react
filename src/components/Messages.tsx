@@ -8,11 +8,13 @@ import Loader from "./loader/Loader";
 export const Messages = () => {
   const [messages, setMessages] = useState<any[]>([]);
   const { data } = useChatContext()!;
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     if (data.chatId !== "") {
       const unSub = onSnapshot(doc(db, "chats", data.chatId), (doc) => {
         doc.exists() && setMessages(doc.data().messages);
+        setIsLoading(false)
       });
       return () => {
         unSub;
@@ -23,8 +25,21 @@ export const Messages = () => {
   const date = new Date();
   const todayDate = `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
 
+  if(messages.length === 0){
+    return(
+      <div className="messages">
+        <div className="no-messages">
+          <p>
+            NO MEssage start the chat
+          </p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="messages">
+      {messages.length === 0 && <Loader/>}
       {messages!.map((message: any, index) => {
         let date = message.date;
         return (
@@ -40,7 +55,7 @@ export const Messages = () => {
                   : message.date
                 : null}
             </p>
-            {messages.length === 0 ? <Loader /> : <Message message={message} />}
+            {<Message message={message} />}
           </span>
         );
       })}

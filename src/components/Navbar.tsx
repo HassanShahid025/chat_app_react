@@ -1,17 +1,40 @@
 import { signOut } from "firebase/auth";
-import  { useState } from "react";
+import  { useState, useRef } from "react";
 import { auth, db, storage } from "../firebase";
 import { useAuthContext } from "../Context/AuthContext";
 import { ChangePicture } from "./ChangePicture";
 import userPic from "../assets/user.jpg"
+import Notiflix from "notiflix";
 
 
 const Navbar = () => {
   const { currentUser } = useAuthContext()!;
-  const [editProfile, setEditProfile] = useState(false);
+  const [editProfile, setEditProfile] = useState(false)
 
   const handleEditProfile = () => {
     setEditProfile(!editProfile);
+  };
+
+  const logout = () => {
+    Notiflix.Confirm.show(
+      "Delete Product",
+      "You are about to delete this product?",
+      "Logout",
+      "Cancel",
+      function okCb() {
+        signOut(auth)
+      },
+      function cancelCb() {
+        console.log("cancel");
+      },
+      {
+        width: "320px",
+        borderRadius: "8px",
+        titleColor: "#f7c17b",
+        okButtonBackground: "#f7c17b",
+        cssAnimationStyle: "zoom",
+      }
+    );
   };
 
  
@@ -26,7 +49,7 @@ const Navbar = () => {
           
           <div className="user-info">
             <p>{currentUser.displayName}</p>
-            <button onClick={() => signOut(auth)}>Logout</button>
+            <button onClick={logout}>Logout</button>
           </div>
         </div>
       </div>
