@@ -58,6 +58,7 @@ const Search = () => {
            displayName: user.displayName,
            photoURL: user.photoURL,
          },
+         [combinedId + ".block"] : false,
          [combinedId + ".date"]: serverTimestamp(),
        });
 
@@ -67,6 +68,7 @@ const Search = () => {
            displayName: currentUser.displayName,
            photoURL: currentUser.photoURL,
          },
+         [combinedId + ".block"] : false,
          [combinedId + ".date"]: serverTimestamp(),
        });
      }
