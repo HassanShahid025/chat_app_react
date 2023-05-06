@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import style from "./auth.module.scss";
 import { ToastContainer, toast } from "react-toastify";
 import Loader from "../../components/loader/Loader";
@@ -7,25 +7,50 @@ import { BsCardImage } from "react-icons/bs";
 import Input from "../../components/inputField/InputField";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, db, storage } from "../../firebase";
-import { UploadTask, getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { doc, setDoc } from "firebase/firestore";
-import userPic from "../../assets/user.jpg"
+import {
+  UploadTask,
+  getDownloadURL,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
+import { collection, doc, getDocs, query, setDoc } from "firebase/firestore";
+import userPic from "../../assets/user.jpg";
 
 const Register = () => {
-  const [fullName, setFullName] = useState("");
+  const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [img, setImg] = useState<File | null>(null)
+  const [img, setImg] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
+  const [users, setUsers] = useState<any[]>([]);
   const navigate = useNavigate();
+  const [userNameTaken, setUserNameTaken] = useState(false);
+
+  const getUsers = async () => {
+    const q = query(collection(db, "users"));
+    const querySnapshot = await getDocs(q);
+    const docsData: any[] = [];
+    querySnapshot.forEach((doc) => {
+      docsData.push(doc.data().displayName);
+    });
+    setUsers(docsData);
+  };
+
+  useEffect(() => {
+    getUsers();
+  }, []);
 
   const isPasswordValid = password.length >= 6;
 
   const registerUser = async (e: any) => {
+    setUserNameTaken(false);
     e.preventDefault();
     if (password !== confirmPassword) {
       toast.error("Passwords don't match.");
+    }
+    if (users.includes(userName)) {
+      setUserNameTaken(true);
     } else {
       setLoading(true);
       const file = e.target[4].files[0];
@@ -33,19 +58,19 @@ const Register = () => {
       try {
         //Creating user
         const res = await createUserWithEmailAndPassword(auth, email, password);
-  
+
         //handling firebase storage
         const date = new Date().getTime();
-        const storageRef = ref(storage, `${fullName + date}`);
-  
+        const storageRef = ref(storage, `${userName + date}`);
+
         let uploadTask: UploadTask | null = null;
-  
+
         if (img !== null) {
           uploadTask = uploadBytesResumable(storageRef, img);
         } else {
           fetch(userPic)
-            .then(response => response.blob())
-            .then(blob => {
+            .then((response) => response.blob())
+            .then((blob) => {
               uploadTask = uploadBytesResumable(storageRef, blob);
               uploadTask.on(
                 "state_changed",
@@ -62,45 +87,46 @@ const Register = () => {
                       break;
                   }
                 },
-                (error:any) => {
+                (error: any) => {
                   toast.error(error.message);
                 },
                 async () => {
                   try {
-                    const downloadURL = await getDownloadURL(uploadTask!.snapshot.ref);
+                    const downloadURL = await getDownloadURL(
+                      uploadTask!.snapshot.ref
+                    );
                     await updateProfile(res.user, {
-                      displayName: fullName,
+                      displayName: userName,
                       photoURL: downloadURL,
                     });
                     //Creating user in firestore
                     await setDoc(doc(db, "users", res.user.uid), {
                       uid: res.user.uid,
-                      displayName: fullName,
+                      displayName: userName,
                       email,
                       photoURL: downloadURL,
                     });
                     // Creating userChats in firestore
                     setDoc(doc(db, "userChats", res.user.uid), {});
                     navigate("/login");
-                  } catch (error:any) {
+                  } catch (error: any) {
                     console.error(error);
                     toast.error(error.message);
                   }
                 }
               );
             })
-            .catch(error => {
-              console.error('Error loading userPic:', error);
+            .catch((error) => {
+              console.error("Error loading userPic:", error);
               toast.error(error.message);
             });
         }
-      } catch (error:any) {
+      } catch (error: any) {
         console.error(error);
         toast.error(error.message);
       }
     }
   };
-  
 
   return (
     <>
@@ -116,11 +142,16 @@ const Register = () => {
           <form onSubmit={registerUser}>
             {/* {Full Name field} */}
             <Input
-              value={fullName}
-              label="Full Name"
+              value={userName}
+              label="Username"
               type="text"
-              setProperty={setFullName}
+              setProperty={setUserName}
             />
+            {userNameTaken && (
+              <p className={`${style["warning-text"]}`}>
+                This username has already taken. Try another
+              </p>
+            )}
             {/* {Email field} */}
             <Input
               value={email}

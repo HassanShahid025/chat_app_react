@@ -10,7 +10,11 @@ const Chats = () => {
   const [chats, setChats] = useState<DocumentData>({});
   const [isLoading, setIsLoading] = useState(true);
   const { currentUser } = useAuthContext()!;
+  const [userChats, setUserChats] = useState<DocumentData>({});
   const { dispatch } = useChatContext()!;
+  const [blockPhotoUrl, setBlockPhotoUrl] = useState<string[]>([]);
+
+
 
   useEffect(() => {
     const getChats = () => {
@@ -24,6 +28,31 @@ const Chats = () => {
     };
     currentUser.uid && getChats();
   }, [currentUser.uid]);
+
+  useEffect(() => {
+    setUserChats({})
+    const getChats = () => {
+      const unSub = onSnapshot(doc(db, "userChats", currentUser.uid), (doc) => {
+        setUserChats(doc.data()!);
+      });
+      return () => {
+        unSub();
+      };
+    };
+    currentUser.uid && getChats();
+  },[currentUser.uid])
+
+
+  useEffect(() => {
+    setBlockPhotoUrl([])
+    if(Object.keys(userChats).length !==0){
+      for(const key in userChats){
+        if(userChats[key].block.isBlocked){
+          setBlockPhotoUrl([...blockPhotoUrl,userChats[key].userInfo.photoURL])
+        }
+      }
+    }
+  },[userChats])
 
   const handleSelect = (user: DocumentData) => {
     dispatch({ type: "CHANGE_USER", payload: user });
@@ -44,6 +73,8 @@ const Chats = () => {
       </div>
     );
   }
+  
+
 
   return (
     <div className="chats" >
@@ -56,11 +87,16 @@ const Chats = () => {
               key={chat[0]}
               onClick={() => handleSelect(chat[1].userInfo)}
             >
-              {chat[1].userInfo.photoURL ? (
-                <img src={chat[1].userInfo.photoURL} alt="" />
+              {blockPhotoUrl.includes(chat[1].userInfo.photoURL) ? (
+                <img src={userPic}/>
               ) : (
-                <img src={userPic} />
+                chat[1].userInfo.photoURL ?  (
+                  <img src={chat[1].userInfo.photoURL} alt="" />
+                ) : (
+                  <img src={userPic} />
+                )
               )}
+             
 
               <div className="userChatInfo">
                 <span>{chat[1].userInfo.displayName}</span>

@@ -3,7 +3,7 @@ import { BsImage } from "react-icons/bs";
 import { MdSend } from "react-icons/md";
 import { useChatContext } from "../Context/ChatContext";
 import { useAuthContext } from "../Context/AuthContext";
-import { Timestamp, arrayUnion, doc, serverTimestamp, updateDoc } from "firebase/firestore";
+import { arrayUnion, doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { db, storage } from "../firebase";
 import { v4 as uuidv4 } from "uuid";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";

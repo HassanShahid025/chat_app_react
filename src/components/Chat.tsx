@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 import {
   BsArrowLeftShort,
-  BsCameraVideoFill,
   BsThreeDots,
 } from "react-icons/bs";
-import { FaUserPlus } from "react-icons/fa";
+
 import { Messages } from "./Messages";
 import Input from "./Input";
 import { useChatContext } from "../Context/ChatContext";
@@ -12,23 +11,25 @@ import { DocumentData, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { useAuthContext } from "../Context/AuthContext";
 import { db } from "../firebase";
 import Notiflix from "notiflix";
-import { async } from "@firebase/util";
+
 
 const Chat = () => {
   const { data } = useChatContext()!;
   const { dispatch } = useChatContext()!;
+  const { isBlocked } = useChatContext()!.data;
+  const { blockBy } = useChatContext()!.data;
   const [shouldDisplay, setShouldDisplay] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [userChats, setUserChats] = useState<DocumentData>({});
   const { currentUser } = useAuthContext()!;
-  const [block, setBlock] = useState({ isBlocked: false, blockBy: "" });
+
 
   function handleDropdownClick() {
     setIsDropdownOpen(!isDropdownOpen);
   }
 
   useEffect(() => {
-    setBlock({ isBlocked: false, blockBy: "" });
+    dispatch({ type: "HANDLE_BLOCK", payload: {isBlocked:false,blockBy:""} })
     const getChats = () => {
       const unSub = onSnapshot(doc(db, "userChats", data.user.uid), (doc) => {
         setUserChats(doc.data()!);
@@ -45,10 +46,7 @@ const Chat = () => {
       for (const key in userChats) {
         if (key.includes(currentUser.uid)) {
           if (userChats[key].block.isBlocked === true) {
-            setBlock({
-              isBlocked: true,
-              blockBy: userChats[key].block.blockBy,
-            });
+            dispatch({ type: "HANDLE_BLOCK", payload: {isBlocked:true,blockBy:userChats[key].block.blockBy} })
           }
           setUserChats({});
         }
@@ -115,7 +113,7 @@ const Chat = () => {
         blockBy: "",
       },
     });
-    setBlock({ isBlocked: false, blockBy: "" })
+    dispatch({ type: "HANDLE_BLOCK", payload: {isBlocked:false,blockBy:""} })
     handleDropdownClick();
   }
 
@@ -166,7 +164,7 @@ const Chat = () => {
                   {isDropdownOpen && (
                     <div className="chatDropdown">
                       <button onClick={closeChat} className="close-chat-btn">Close chat</button>
-                      {block.isBlocked === true ? (
+                      {isBlocked === true ? (
                         <button onClick={() => blockModal("unblock")}>
                           Unblock user
                         </button>
@@ -188,14 +186,14 @@ const Chat = () => {
           {data.chatId && (
             <>
               <Messages />
-              {block.isBlocked === false ? (
+              {isBlocked === false ? (
                 <Input />
               ) : (
                 <div className="block-text">
                   <p>
-                    {block.blockBy === currentUser.displayName
+                    {blockBy === currentUser.displayName
                       ? `You have blocked ${data.user.displayName}`
-                      : `${block.blockBy} has blocked you`}
+                      : `${blockBy} has blocked you`}
                   </p>
                 </div>
               )}

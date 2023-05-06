@@ -22,12 +22,11 @@ const Search = () => {
   const [users, setUsers] = useState<DocumentData[] | null>(null);
   const { currentUser } = useAuthContext()!;
   const { data } = useFetchCollection("users");
-  
 
   const handleSearch = () => {
     if (search !== "") {
       const firebaseUsers = data.filter((user) => {
-        return user.displayName.toLowerCase().includes(search.toLowerCase());
+        return currentUser.uid !== user.uid && user.displayName.toLowerCase().includes(search.toLowerCase());
       });
       setUsers(firebaseUsers);
     }

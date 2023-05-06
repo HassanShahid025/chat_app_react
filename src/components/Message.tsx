@@ -6,6 +6,7 @@ import userPic from "../assets/user.jpg"
 const Message = ({ message }: { message: any }) => {
   const { currentUser } = useAuthContext()!;
   const { data } = useChatContext()!;
+  const { isBlocked } = useChatContext()!.data;
 
   const ref = useRef<HTMLDivElement | null>(null)
 
@@ -23,7 +24,7 @@ const Message = ({ message }: { message: any }) => {
           src={
             message.senderId === currentUser.uid
               ? currentUser.photoURL ? currentUser.photoURL : userPic
-              : data.user.photoURL ? data.user.photoURL : userPic
+              : isBlocked ? userPic : data.user.photoURL ? data.user.photoURL : userPic
           }
           alt=""
         />

@@ -128,8 +128,9 @@
 
         button {
           background-color: #5d5b8d;
-          font-size: 1.2rem;
-          font-weight: 800;
+          border-radius: 20px;
+          font-size: 1.4rem;
+          font-weight: 600;
           border: none;
           cursor: pointer;
           padding: 8px;
@@ -146,6 +147,7 @@
     .searchForm {
       padding: 10px;
       input {
+        width: 100%;
         background-color: transparent;
         border: none;
         color: white;
@@ -196,6 +198,10 @@
     justify-content: space-between;
     padding: 10px;
     color: lightgray;
+    span{
+      font-size: 1.7rem;
+      font-weight: 600;
+    }
     div{
       height: 100%;
       display: flex;
