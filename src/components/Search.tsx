@@ -39,13 +39,16 @@ const Search = () => {
   
 
   const handleSelect = async (user: DocumentData) => {
+    
      //check whether the group(chats in firestore) exists, if not create
      const combinedId =
      currentUser.uid > user.uid
        ? currentUser.uid + user.uid
        : user.uid + currentUser.uid;
+       console.log(combinedId)
    try {
      const res = await getDoc(doc(db, "chats", combinedId));
+     console.log(!res.exists())
 
      if (!res.exists()) {
        //create a chat in chats collection
@@ -58,7 +61,11 @@ const Search = () => {
            displayName: user.displayName,
            photoURL: user.photoURL,
          },
-         [combinedId + ".block"] : false,
+         [combinedId + ".block"] : {
+          isBlocked:false,
+          blockBy:""
+         },
+         [combinedId + ".lastMessage"] : {text:""},
          [combinedId + ".date"]: serverTimestamp(),
        });
 
@@ -68,7 +75,11 @@ const Search = () => {
            displayName: currentUser.displayName,
            photoURL: currentUser.photoURL,
          },
-         [combinedId + ".block"] : false,
+         [combinedId + ".block"] : {
+          isBlocked:false,
+          blockBy:""
+         },
+         [combinedId + ".lastMessage"] : {text:""},
          [combinedId + ".date"]: serverTimestamp(),
        });
      }

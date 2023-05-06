@@ -246,6 +246,13 @@
     }
     
   }
+  .div{
+    background-color: #ddddf7;
+    height: calc(100% - 50px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
   .messages {
     background-color: #ddddf7;
     padding: 10px;
@@ -253,6 +260,7 @@
     height: calc(100% - 101px);
     overflow: scroll;
     overflow-x: hidden;
+   
     .date {
       text-align: center;
       color: gray;

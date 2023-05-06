@@ -12,7 +12,7 @@ import { toast } from "react-toastify";
 
 const Input = () => {
   const [text, setText] = useState("");
-  const [img, setImg] = useState<File | null>(null);
+  const [chatImg, setChatImg] = useState<File | null>(null);
 
   const { currentUser } = useAuthContext()!;
   const { data } = useChatContext()!;
@@ -21,9 +21,10 @@ const Input = () => {
     let currentMinutes = `${date.getMinutes().toLocaleString().length === 1 ? `0${date.getMinutes()}` : `${date.getMinutes()}`}`
 
   const handleSend = async () => {
-    if (img) {
+    if (chatImg) {
+      setText("")
       const storageRef = ref(storage, uuidv4());
-      const uploadTask = uploadBytesResumable(storageRef, img);
+      const uploadTask = uploadBytesResumable(storageRef, chatImg);
       uploadTask.on(
         "state_changed",
         (snapshot) => {
@@ -50,7 +51,8 @@ const Input = () => {
                   id: uuidv4(),
                   text,
                   senderId: currentUser.uid,
-                  date: Timestamp.now(),
+                  date: `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`,
+                  time:`${currentHours}:${currentMinutes}`,
                   img:downloadURL
                 }),
               })
@@ -59,9 +61,25 @@ const Input = () => {
         }
       );
 
+      await updateDoc(doc(db,"userChats",currentUser.uid),{
+        [data.chatId + ".lastMessage"]:{
+          text:"Image sent"
+        },
+        [data.chatId + ".date"]: serverTimestamp()
+      })
+      await updateDoc(doc(db,"userChats",data.user.uid),{
+        [data.chatId + ".lastMessage"]:{
+          text:"Image Recieved"
+        },
+        [data.chatId + ".date"]: serverTimestamp()
+      })
+
+      setChatImg(null)
+
     } 
     
     else if(text !== "") {
+      setChatImg(null)
       await updateDoc(doc(db, "chats", data.chatId), {
         messages: arrayUnion({
           id: uuidv4(),
@@ -71,23 +89,23 @@ const Input = () => {
           time:`${currentHours}:${currentMinutes}`       
         }),
       });
+      await updateDoc(doc(db,"userChats",currentUser.uid),{
+        [data.chatId + ".lastMessage"]:{
+          text,
+        },
+        [data.chatId + ".date"]: serverTimestamp()
+      })
+      await updateDoc(doc(db,"userChats",data.user.uid),{
+        [data.chatId + ".lastMessage"]:{
+          text,
+        },
+        [data.chatId + ".date"]: serverTimestamp()
+      })
+
+      setText("")
     }
 
-    await updateDoc(doc(db,"userChats",currentUser.uid),{
-      [data.chatId + ".lastMessage"]:{
-        text,
-      },
-      [data.chatId + ".date"]: serverTimestamp()
-    })
-    await updateDoc(doc(db,"userChats",data.user.uid),{
-      [data.chatId + ".lastMessage"]:{
-        text,
-      },
-      [data.chatId + ".date"]: serverTimestamp()
-    })
-
-    setText("")
-    setImg(null)
+   
   };
 
   const handleKeyPress = (e:React.KeyboardEvent<HTMLInputElement>) => {
@@ -112,12 +130,12 @@ const Input = () => {
       <div className="send">
         <input
           type="file"
-          id="file"
+          id="chatPic"
           style={{ display: "none" }}
-          onChange={(e) => setImg(e.target.files![0])}
+          onChange={(e) => setChatImg(e.target.files![0])}
           onKeyDown={(e) => handleKeyPress(e)}
         />
-        <label htmlFor="file" className="pointer">
+        <label htmlFor="chatPic" className="pointer">
           <BsImage size={20} />
         </label>
         <MdSend size={20} className="pointer" onClick={handleSend} />

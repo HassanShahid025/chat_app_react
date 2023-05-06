@@ -17,6 +17,7 @@ interface IChangePicture{
 
 
 export const ChangePicture = ({setEditProfile,editProfile,}:IChangePicture) => {
+  console.log("dhfhdbfh")
     const [docs ,setdocs] =  useState<any[]>([])
     const [isLoading, setLoading] = useState(false)
     const { currentUser } = useAuthContext()!;
@@ -33,6 +34,9 @@ export const ChangePicture = ({setEditProfile,editProfile,}:IChangePicture) => {
         [combinedId + ".userInfo.photoURL"]: currentUser.photoURL,
       }).then(() => {
         setLoading(false)
+      }).catch((error) => {
+        setLoading(false)
+        console.log(error)
       });
      }
 
@@ -53,14 +57,18 @@ export const ChangePicture = ({setEditProfile,editProfile,}:IChangePicture) => {
 
         // search in docs to find current user who has changed his pic
         useEffect(() => {
+          console.log("useEffect")
           if(docs){
             for (const obj of docs) {
               const keys = Object.keys(obj);
               for (const key of keys) {
                 const nestedObj = obj[key];
                 const nestedKeys = Object.keys(nestedObj);
+                console.log(nestedKeys[0])
+                console.log(currentUser.uid)
                 if(nestedKeys[0].includes(currentUser.uid)){
                   for (const nestedKey of nestedKeys) {
+                    console.log(nestedObj[nestedKey].userInfo.uid)
                     if(nestedObj[nestedKey].userInfo.uid === currentUser.uid){
                       updatePicInUserChats(keys[0],nestedKeys[0]) 
                       console.log("function activated")
@@ -144,7 +152,7 @@ export const ChangePicture = ({setEditProfile,editProfile,}:IChangePicture) => {
              <input
         type="file"
         name="image"
-        id="file"
+        id="UserPic"
         accept="image/*"
         placeholder="Product Image"
         onChange={(e) => handlePicture(e)}
@@ -164,7 +172,7 @@ export const ChangePicture = ({setEditProfile,editProfile,}:IChangePicture) => {
           <div className="user-img"> 
               {isLoading && <Loader/>}
             
-            <label htmlFor="file" className="label">
+            <label htmlFor="UserPic" className="label">
               {currentUser.photoURL ? (
                 <img src={currentUser.photoURL} alt="" />
               ) : (

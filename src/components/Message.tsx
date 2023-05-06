@@ -30,7 +30,9 @@ const Message = ({ message }: { message: any }) => {
         <span>{message.time}</span>
       </div>
       <div className="messageContent">
-        <p>{message.text}</p>
+        {message.text === "" ? null : (
+          <p>{message.text}</p>
+        )}
         {
           message.img && <img src={message.img} alt="" />
         }

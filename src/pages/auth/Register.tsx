@@ -7,14 +7,16 @@ import { BsCardImage } from "react-icons/bs";
 import Input from "../../components/inputField/InputField";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, db, storage } from "../../firebase";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { UploadTask, getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
+import userPic from "../../assets/user.jpg"
 
 const Register = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [img, setImg] = useState<File | null>(null)
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -23,63 +25,82 @@ const Register = () => {
   const registerUser = async (e: any) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      toast.error("Passwords donot match.");
+      toast.error("Passwords don't match.");
     } else {
       setLoading(true);
       const file = e.target[4].files[0];
+      setImg(file);
       try {
         //Creating user
         const res = await createUserWithEmailAndPassword(auth, email, password);
-
+  
         //handling firebase storage
         const date = new Date().getTime();
         const storageRef = ref(storage, `${fullName + date}`);
-
-        const uploadTask = uploadBytesResumable(storageRef, file);
-        uploadTask.on(
-          "state_changed",
-          (snapshot) => {
-            const progress =
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log("Upload is " + progress + "% done");
-            switch (snapshot.state) {
-              case "paused":
-                console.log("Upload is paused");
-                break;
-              case "running":
-                console.log("Upload is running");
-                break;
-            }
-          },
-          (error) => {
-            toast.error(error.message);
-          },
-          () => {
-            getDownloadURL(uploadTask.snapshot.ref).then(
-              async (downloadURL) => {
-                await updateProfile(res.user, {
-                  displayName: fullName,
-                  photoURL: downloadURL,
-                });
-                //Creating user in firestore
-                await setDoc(doc(db, "users", res.user.uid), {
-                  uid: res.user.uid,
-                  displayName: fullName,
-                  email,
-                  photoURL: downloadURL,
-                });
-                // Creating userChats in firestore
-                setDoc(doc(db, "userChats", res.user.uid), {});
-                navigate("/login");
-              }
-            );
-          }
-        );
-      } catch (error: any) {
+  
+        let uploadTask: UploadTask | null = null;
+  
+        if (img !== null) {
+          uploadTask = uploadBytesResumable(storageRef, img);
+        } else {
+          fetch(userPic)
+            .then(response => response.blob())
+            .then(blob => {
+              uploadTask = uploadBytesResumable(storageRef, blob);
+              uploadTask.on(
+                "state_changed",
+                (snapshot) => {
+                  const progress =
+                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                  console.log("Upload is " + progress + "% done");
+                  switch (snapshot.state) {
+                    case "paused":
+                      console.log("Upload is paused");
+                      break;
+                    case "running":
+                      console.log("Upload is running");
+                      break;
+                  }
+                },
+                (error:any) => {
+                  toast.error(error.message);
+                },
+                async () => {
+                  try {
+                    const downloadURL = await getDownloadURL(uploadTask!.snapshot.ref);
+                    await updateProfile(res.user, {
+                      displayName: fullName,
+                      photoURL: downloadURL,
+                    });
+                    //Creating user in firestore
+                    await setDoc(doc(db, "users", res.user.uid), {
+                      uid: res.user.uid,
+                      displayName: fullName,
+                      email,
+                      photoURL: downloadURL,
+                    });
+                    // Creating userChats in firestore
+                    setDoc(doc(db, "userChats", res.user.uid), {});
+                    navigate("/login");
+                  } catch (error:any) {
+                    console.error(error);
+                    toast.error(error.message);
+                  }
+                }
+              );
+            })
+            .catch(error => {
+              console.error('Error loading userPic:', error);
+              toast.error(error.message);
+            });
+        }
+      } catch (error:any) {
+        console.error(error);
         toast.error(error.message);
       }
     }
   };
+  
 
   return (
     <>
