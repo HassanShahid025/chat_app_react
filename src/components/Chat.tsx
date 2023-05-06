@@ -1,5 +1,9 @@
-import {useState,useEffect} from "react";
-import { BsArrowLeftShort, BsCameraVideoFill, BsThreeDots } from "react-icons/bs";
+import { useState, useEffect } from "react";
+import {
+  BsArrowLeftShort,
+  BsCameraVideoFill,
+  BsThreeDots,
+} from "react-icons/bs";
 import { FaUserPlus } from "react-icons/fa";
 import { Messages } from "./Messages";
 import Input from "./Input";
@@ -8,48 +12,49 @@ import { DocumentData, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { useAuthContext } from "../Context/AuthContext";
 import { db } from "../firebase";
 import Notiflix from "notiflix";
+import { async } from "@firebase/util";
 
 const Chat = () => {
-  const {data} = useChatContext()!
+  const { data } = useChatContext()!;
   const { dispatch } = useChatContext()!;
   const [shouldDisplay, setShouldDisplay] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [userChats, setUserChats] = useState<DocumentData>({});
   const { currentUser } = useAuthContext()!;
-  const [block, setBlock] = useState({isBlocked:false, blockBy:""})
-
+  const [block, setBlock] = useState({ isBlocked: false, blockBy: "" });
 
   function handleDropdownClick() {
     setIsDropdownOpen(!isDropdownOpen);
   }
 
   useEffect(() => {
-    setBlock({isBlocked:false, blockBy:""})
-      const getChats = () => {
-        const unSub = onSnapshot(doc(db, "userChats", data.user.uid), (doc) => {
-          setUserChats(doc.data()!);
-        });
-        return () => {
-          unSub();
-        };
+    setBlock({ isBlocked: false, blockBy: "" });
+    const getChats = () => {
+      const unSub = onSnapshot(doc(db, "userChats", data.user.uid), (doc) => {
+        setUserChats(doc.data()!);
+      });
+      return () => {
+        unSub();
       };
-    data.chatId && getChats()
-
-   
+    };
+    data.chatId && getChats();
   }, [data.chatId]);
-  console.log(data.user.uid)
 
   useEffect(() => {
-    for(const key in userChats){
-      if(key.includes(currentUser.uid)){
-        if(userChats[key].block.isBlocked === true)
-        setBlock({isBlocked:true,blockBy:userChats[key].blockBy})
+    if (Object.keys(userChats).length !== 0) {
+      for (const key in userChats) {
+        if (key.includes(currentUser.uid)) {
+          if (userChats[key].block.isBlocked === true) {
+            setBlock({
+              isBlocked: true,
+              blockBy: userChats[key].block.blockBy,
+            });
+          }
+          setUserChats({});
+        }
       }
     }
-  },[data.chatId])
-
-
-  
+  }, [userChats]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -60,46 +65,68 @@ const Chat = () => {
 
     handleResize(); // Call initially to set the correct display state
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, [data.chatId]);
 
   const closeChat = () => {
-    dispatch({ type: "CLEAR_USER"});
-    handleDropdownClick()
-  }
+    dispatch({ type: "CLEAR_USER" });
+    handleDropdownClick();
+  };
 
   const blockUser = async() => {
-
     const combinedId =
-     currentUser.uid > data.user.uid
-       ? currentUser.uid + data.user.uid
-       : data.user.uid + currentUser.uid;
+      currentUser.uid > data.user.uid
+        ? currentUser.uid + data.user.uid
+        : data.user.uid + currentUser.uid;
 
     await updateDoc(doc(db, "userChats", currentUser.uid), {
-      [combinedId + ".block"] : {
-        isBlocked:true,
-        blockBy:currentUser.displayName
-       }  
+      [combinedId + ".block"]: {
+        isBlocked: true,
+        blockBy: currentUser.displayName,
+      },
     });
 
     await updateDoc(doc(db, "userChats", data.user.uid), {
-      [combinedId + ".block"] : {
-       isBlocked:true,
-       blockBy:currentUser.displayName
-      }
+      [combinedId + ".block"]: {
+        isBlocked: true,
+        blockBy: currentUser.displayName,
+      },
     });
-    handleDropdownClick()
+    handleDropdownClick();
+  };
+
+  const unBlockUser = async() => {
+    const combinedId =
+      currentUser.uid > data.user.uid
+        ? currentUser.uid + data.user.uid
+        : data.user.uid + currentUser.uid;
+
+    await updateDoc(doc(db, "userChats", currentUser.uid), {
+      [combinedId + ".block"]: {
+        isBlocked: false,
+        blockBy: "",
+      },
+    });
+
+    await updateDoc(doc(db, "userChats", data.user.uid), {
+      [combinedId + ".block"]: {
+        isBlocked: false,
+        blockBy: "",
+      },
+    });
+    setBlock({ isBlocked: false, blockBy: "" })
+    handleDropdownClick();
   }
 
-  const blockModal = () => {
+  const blockModal = (text: string) => {
     Notiflix.Confirm.show(
-      "Block user",
-      `You are about to block ${data.user.displayName}?`,
+      text === "block" ? "Block user" : "Unblock user",
+      `You are about to ${text} ${data.user.displayName}?`,
       "Confirm",
       "Cancel",
       function okCb() {
-        blockUser()
+        text === "block" ? blockUser() : unBlockUser()
       },
       function cancelCb() {
         handleDropdownClick();
@@ -112,61 +139,71 @@ const Chat = () => {
         cssAnimationStyle: "zoom",
       }
     );
-  }
+  };
+
 
   return (
-   <>
-   {shouldDisplay && (
-     <div className="chat" >
-        <div className="chatInfo">
+    <>
+      {shouldDisplay && (
+        <div className="chat">
+          <div className="chatInfo">
+            {data.chatId && (
+              <>
+                <div>
+                  <BsArrowLeftShort
+                    size={40}
+                    onClick={closeChat}
+                    style={{ cursor: "pointer" }}
+                    className="chat-arrow"
+                  />
+                  <span>{data.user.displayName}</span>
+                </div>
+
+                <div className="chatContainer">
+                  <div className="chatIcons" onClick={handleDropdownClick}>
+                    <BsThreeDots size={20} />
+                  </div>
+                  {isDropdownOpen && (
+                    <div className="chatDropdown">
+                      <button onClick={closeChat} className="close-chat-btn">Close chat</button>
+                      {block.isBlocked === true ? (
+                        <button onClick={() => blockModal("unblock")}>
+                          Unblock user
+                        </button>
+                      ) : (
+                        <button onClick={() => blockModal("block")}>Block user</button>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
+          {!data.chatId && (
+            <div className="div">
+              <p>No chats availabel</p>
+            </div>
+          )}
+
           {data.chatId && (
             <>
-               <div>
-        <BsArrowLeftShort
-            size={40}
-            onClick={closeChat}
-            style={{cursor:"pointer"}}
-            className="chat-arrow"
-          />
-        <span>{data.user.displayName}</span>
-        </div>
-     
-        <div className="chatContainer">
-      <div className="chatIcons" onClick={handleDropdownClick}>
-        <BsThreeDots size={20} />
-      </div>
-      {isDropdownOpen && (
-        <div className="chatDropdown">
-          <button onClick={closeChat}>Close chat</button>
-          <button onClick={blockModal}>Block user</button>
-        </div>
-      )}
-    </div>
+              <Messages />
+              {block.isBlocked === false ? (
+                <Input />
+              ) : (
+                <div className="block-text">
+                  <p>
+                    {block.blockBy === currentUser.displayName
+                      ? `You have blocked ${data.user.displayName}`
+                      : `${block.blockBy} has blocked you`}
+                  </p>
+                </div>
+              )}
             </>
           )}
-       
-
         </div>
-        {!data.chatId && (
-          <div className="div">
-            <p>No chats availabel</p>
-          </div>
-        )}
-        
-        {data.chatId && (
-       <>
-        <Messages />
-        {block.isBlocked === false ? (<Input />): (<p>blocked</p>)}
-        
-      </>
-     )}
-       
-      
-    
-     
-   </div>
-   )}
-   </>
+      )}
+    </>
   );
 };
 

@@ -17,7 +17,6 @@ interface IChangePicture{
 
 
 export const ChangePicture = ({setEditProfile,editProfile,}:IChangePicture) => {
-  console.log("dhfhdbfh")
     const [docs ,setdocs] =  useState<any[]>([])
     const [isLoading, setLoading] = useState(false)
     const { currentUser } = useAuthContext()!;
@@ -57,7 +56,6 @@ export const ChangePicture = ({setEditProfile,editProfile,}:IChangePicture) => {
 
         // search in docs to find current user who has changed his pic
         useEffect(() => {
-          console.log("useEffect")
           if(docs){
             for (const obj of docs) {
               const keys = Object.keys(obj);
