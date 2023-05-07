@@ -16,6 +16,7 @@ import useFetchCollection from "../customHooks/useFetchCollection";
 import { useAuthContext } from "../Context/AuthContext";
 import userPic from "../assets/user.jpg"
 import { useChatContext } from "../Context/ChatContext";
+import { AiOutlineSearch } from "react-icons/ai";
 
 const Search = () => {
   const [search, setSearch] = useState("");
@@ -96,6 +97,7 @@ const Search = () => {
   return (
     <div className="search" >
       <div className="searchForm">
+        <AiOutlineSearch color="white" size={20} className="search-icon"/>
         <input
           type="text"
           placeholder="Find a user"

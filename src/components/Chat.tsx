@@ -41,6 +41,7 @@ const Chat = () => {
       };
     };
     data.chatId && getChats();
+   
   }, [data.chatId]);
 
   useEffect(() => {
@@ -71,7 +72,7 @@ const Chat = () => {
 
   const closeChat = () => {
     dispatch({ type: "CLEAR_USER" });
-    handleDropdownClick();
+    setIsDropdownOpen(false)
   };
 
   const blockUser = async() => {
@@ -140,7 +141,6 @@ const Chat = () => {
       }
     );
   };
-
 
 
   return (

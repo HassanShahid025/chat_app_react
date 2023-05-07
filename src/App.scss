@@ -143,10 +143,18 @@
   }
   .search {
     border-bottom: 1px solid gray;
-
+    height: auto;
     .searchForm {
       padding: 10px;
+      height: 40px;
+      position: relative;
+      .search-icon{
+        position: absolute;
+        left: 1px;
+      }
       input {
+        position: absolute;
+        left: 30px;
         width: 100%;
         background-color: transparent;
         border: none;
