@@ -13,11 +13,13 @@ import { db } from "../firebase";
 import Notiflix from "notiflix";
 
 
+
 const Chat = () => {
   const { data } = useChatContext()!;
   const { dispatch } = useChatContext()!;
   const { isBlocked } = useChatContext()!.data;
   const { blockBy } = useChatContext()!.data;
+ const {sendPicture} = useChatContext()!.data;
   const [shouldDisplay, setShouldDisplay] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [userChats, setUserChats] = useState<DocumentData>({});
@@ -140,6 +142,7 @@ const Chat = () => {
   };
 
 
+
   return (
     <>
       {shouldDisplay && (
@@ -161,7 +164,7 @@ const Chat = () => {
                   <div className="chatIcons" onClick={handleDropdownClick}>
                     <BsThreeDots size={20} />
                   </div>
-                  {isDropdownOpen && (
+                  {isDropdownOpen && !sendPicture &&(
                     <div className="chatDropdown">
                       <button onClick={closeChat} className="close-chat-btn">Close chat</button>
                       {isBlocked === true ? (
@@ -182,6 +185,8 @@ const Chat = () => {
               <p>No chats availabel</p>
             </div>
           )}
+
+          
 
           {data.chatId && (
             <>

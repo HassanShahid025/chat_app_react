@@ -18,6 +18,7 @@ type actionType =
   | { type: "REMOVE_ITEM"; payload: number }
   | { type: "CLEAR_USER" }
   | { type: "HANDLE_BLOCK"; payload:{isBlocked:boolean,blockBy:string}}
+  | { type: "HANDLE_PICTURE"; payload: boolean}
 
 const ChatContext = createContext<AppContextType | null>(null);
 
@@ -28,7 +29,8 @@ export const ChatProvider = ({ children }: any) => {
     chatId: "",
     user: {},
     isBlocked: false, 
-    blockBy: "" 
+    blockBy: "" ,
+    sendPicture: false
   };
 
   const chatReducer = (state: typeof INITIAL_STATE, action: actionType) => {
@@ -53,6 +55,11 @@ export const ChatProvider = ({ children }: any) => {
             ...state,
             isBlocked: action.payload.isBlocked,
             blockBy: action.payload.blockBy
+          };
+        case "HANDLE_PICTURE":
+          return{
+            ...state,
+            sendPicture: action.payload,
           };
       default:
         return state;

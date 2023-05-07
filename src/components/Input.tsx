@@ -8,6 +8,7 @@ import { db, storage } from "../firebase";
 import { v4 as uuidv4 } from "uuid";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { toast } from "react-toastify";
+import SendPic from "./SendPic";
 
 
 const Input = () => {
@@ -16,9 +17,19 @@ const Input = () => {
 
   const { currentUser } = useAuthContext()!;
   const { data } = useChatContext()!;
+  const {dispatch} = useChatContext()!
+  const { sendPicture } = useChatContext()!.data;
+
   const date = new Date()
   const currentHours = `${date.getHours().toLocaleString().length === 1 ? `0${date.getHours()}` : `${date.getHours()}`}`
     let currentMinutes = `${date.getMinutes().toLocaleString().length === 1 ? `0${date.getMinutes()}` : `${date.getMinutes()}`}`
+
+    const handleImageSelect  =(event: React.ChangeEvent<HTMLInputElement>) => {
+      if (event.target.files && event.target.files[0]) {
+        dispatch({ type: "HANDLE_PICTURE", payload: true });
+        setChatImg(event.target.files[0]);
+      }
+    };
 
   const handleSend = async () => {
     if (chatImg) {
@@ -63,19 +74,19 @@ const Input = () => {
 
       await updateDoc(doc(db,"userChats",currentUser.uid),{
         [data.chatId + ".lastMessage"]:{
-          text:"Image sent"
+          text:text === "" ? "Image sent" : text
         },
         [data.chatId + ".date"]: serverTimestamp()
       })
       await updateDoc(doc(db,"userChats",data.user.uid),{
         [data.chatId + ".lastMessage"]:{
-          text:"Image Recieved"
+          text: text === "" ? "Image Recieved" : text
         },
         [data.chatId + ".date"]: serverTimestamp()
       })
 
       setChatImg(null)
-
+      dispatch({ type: "HANDLE_PICTURE", payload: false });
     } 
     
     else if(text !== "") {
@@ -88,7 +99,7 @@ const Input = () => {
           date: `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`,
           time:`${currentHours}:${currentMinutes}`       
         }),
-      });
+      }).then(() => {setText("")});
       await updateDoc(doc(db,"userChats",currentUser.uid),{
         [data.chatId + ".lastMessage"]:{
           text,
@@ -102,7 +113,7 @@ const Input = () => {
         [data.chatId + ".date"]: serverTimestamp()
       })
 
-      setText("")
+      
     }
 
    
@@ -117,7 +128,9 @@ const Input = () => {
  
 
   return (
-    <div className="input">
+   <>
+   {sendPicture && <SendPic chatImg={chatImg} text={text} setText={setText} handleSend={handleSend}/>}
+     <div className="input">
      <div className="input-container">
      <input
         type="text"
@@ -132,8 +145,7 @@ const Input = () => {
           type="file"
           id="chatPic"
           style={{ display: "none" }}
-          onChange={(e) => setChatImg(e.target.files![0])}
-          onKeyDown={(e) => handleKeyPress(e)}
+          onChange={handleImageSelect}
         />
         <label htmlFor="chatPic" className="pointer">
           <BsImage size={20} />
@@ -141,6 +153,7 @@ const Input = () => {
         <MdSend size={20} className="pointer" onClick={handleSend} />
       </div>
     </div>
+   </>
   );
 };
 

@@ -23,7 +23,8 @@ export const Messages = () => {
   const todayDate = `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
 
   return (
-    <div className="messages">
+   <>
+     <div className="messages">
       {messages!.map((message: any, index) => {
         let date = message.date;
         return (
@@ -44,5 +45,6 @@ export const Messages = () => {
         );
       })}
     </div>
+   </>
   );
 };
