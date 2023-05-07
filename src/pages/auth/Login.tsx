@@ -77,12 +77,6 @@ const Login = () => {
             </div>
             <p>-- or --</p>
           </form>
-          <button
-            className="--btn --btn-primary --btn-block"
-            onClick={signInWithGoogle}
-          >
-            <FaGoogle color="#fff" /> Login With Google
-          </button>
           <span className={style.register}>
             <p>Don't have a account?</p>
             <Link to="/register">Register</Link>

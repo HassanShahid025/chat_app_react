@@ -135,8 +135,8 @@ const Chat = () => {
       {
         width: "320px",
         borderRadius: "8px",
-        titleColor: "#f7c17b",
-        okButtonBackground: "#f7c17b",
+        titleColor: "#5d5b8d",
+        okButtonBackground: "#5d5b8d",
         cssAnimationStyle: "zoom",
       }
     );

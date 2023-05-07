@@ -214,7 +214,7 @@ const Register = () => {
               style={{ display: "none" }}
             />
             <label htmlFor="file" className={style["image-upload"]}>
-              <BsCardImage size={30} color="#88428d" />
+              <BsCardImage size={30} color="#8daff1" />
               <span>Add an avatar</span>
             </label>
             <button
