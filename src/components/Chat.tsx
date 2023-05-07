@@ -182,7 +182,7 @@ const Chat = () => {
           </div>
           {!data.chatId && (
             <div className="div">
-              <p>No chats availabel</p>
+              <p>Enjoy unlimited chatting and share pictures for free!!</p>
             </div>
           )}
 

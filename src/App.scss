@@ -1,3 +1,6 @@
+*{
+  font-family: 'Ubuntu', sans-serif;
+}
 .home {
   height: 100vh;
   display: flex;
@@ -167,33 +170,47 @@
     }
   }
 
-  .userChat {
-    padding: 10px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: white;
-    cursor: pointer;
-    &:hover {
-      background-color: #2f2d52;
+  .chats{
+    .no-chat{
+      height: calc(100vh - 150px);
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-size: 1.5rem;
     }
-    img {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      object-fit: cover;
-    }
-    .userChatInfo {
-      span {
-        font-size: 18px;
-        font-weight: 500;
+    .userChat {
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: white;
+      cursor: pointer;
+      &:hover {
+        background-color: #2f2d52;
       }
-      p {
-        font-size: 14px;
-        color: lightgray;
+      img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+      .userChatInfo {
+        span {
+          font-size: 18px;
+          font-weight: 500;
+        }
+        p {
+          font-size: 14px;
+          color: lightgray;
+        }
       }
     }
+
   }
+
+ 
 }
 
 .chat {
@@ -336,6 +353,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 1.5rem;
   }
   .block-text{
     height: 50px;
@@ -359,7 +377,8 @@
     .date {
       text-align: center;
       color: gray;
-      font-size: 1.3rem;
+      font-size: 1.6rem;
+      padding: 1.5rem 0;
     }
     .message {
       display: flex;
@@ -395,8 +414,9 @@
           padding: 10px 10px;
           max-width: 300px;
           border-radius: 0px 10px 10px 10px;
-          font-size: 1.3rem;
+          font-size: 1.6rem;
           min-height: auto;
+          line-height: 1.9rem;
         }
 
         img {

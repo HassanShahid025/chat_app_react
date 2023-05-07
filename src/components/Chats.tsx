@@ -69,7 +69,10 @@ const Chats = () => {
   if (!chats || Object.keys(chats).length === 0) {
     return (
       <div className="chats">
-        <p>No chats for you</p>
+        <div className="no-chat">
+        <p>You haven't started any conversations yet
+        </p>
+        </div>
       </div>
     );
   }
