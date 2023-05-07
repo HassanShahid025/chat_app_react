@@ -3,9 +3,9 @@ import style from "./auth.module.scss";
 import { ToastContainer, toast } from "react-toastify";
 import Loader from "../../components/loader/Loader";
 import { Link, useNavigate } from "react-router-dom";
-import { FaGoogle } from "react-icons/fa";
+
 import InputField from "../../components/inputField/InputField";
-import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { signInWithEmailAndPassword, } from "firebase/auth";
 import { auth } from "../../firebase";
 
 const Login = () => {
@@ -26,19 +26,6 @@ const Login = () => {
       .catch((error) => {
         toast.error(error.message);
         setLoading(false);
-      });
-  };
-
-  const provider = new GoogleAuthProvider();
-  const signInWithGoogle = () => {
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        const user = result.user;
-        toast.success("Login Successful");
-        navigate("/")
-      })
-      .catch((error) => {
-        toast.error(error.message);
       });
   };
 
