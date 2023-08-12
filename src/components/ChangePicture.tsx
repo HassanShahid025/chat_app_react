@@ -11,7 +11,7 @@ import {
 } from "firebase/storage";
 import { auth, db, storage } from "../firebase";
 import { updateProfile } from "firebase/auth";
-import { collection, doc, getDocs, query, updateDoc } from "firebase/firestore";
+import { collection, doc, getDocs, query, setDoc, updateDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import Loader from "./loader/Loader";
 
@@ -28,7 +28,7 @@ export const ChangePicture = ({
   const [isLoading, setLoading] = useState(false);
   const { currentUser } = useAuthContext()!;
 
-  //Opening & closing of update Profile pic
+  //Opening & closing of update Profile pic tab
   const handleEditProfile = () => {
     setEditProfile(!editProfile);
   };
@@ -50,8 +50,9 @@ export const ChangePicture = ({
       });
   };
 
-  // update pic in firestore users and set docs array to userChats from firestore
+  // update pic in firestore users and set docs to userChats from firestore
   const handlePicFirebase = async () => {
+    setdocs([])
     await updateDoc(doc(db, "users", currentUser.uid), {
       photoURL: currentUser.photoURL,
     });
@@ -65,6 +66,27 @@ export const ChangePicture = ({
     setdocs(docsData);
   };
 
+ 
+  // const func = () =>{
+  //   for (const obj of docs) {
+  //     const keys = Object.keys(obj);
+  //     for (const key of keys) {
+  //       const nestedObj = obj[key];
+  //       const nestedKeys = Object.keys(nestedObj);
+  //       for(const nestedKey of nestedKeys){
+  //         if(nestedKey.includes(currentUser.uid)){
+  //           if(nestedObj[nestedKey].userInfo.uid === currentUser.uid){
+  //             console.log(nestedKey, key)
+  //             updatePicInUserChats(key, nestedKey)
+  //             console.log("function activated");
+  //           }
+  //         }
+  //       }
+
+  //     }
+  //   }
+  // }
+
   // search in docs to find current user who has changed his pic
   useEffect(() => {
     if (docs.length !== 0) {
@@ -75,17 +97,28 @@ export const ChangePicture = ({
           const nestedKeys = Object.keys(nestedObj);
           console.log(nestedKeys[0]);
           console.log(currentUser.uid);
-          if (nestedKeys[0]) {
-            if (nestedKeys[0].includes(currentUser.uid)) {
-              for (const nestedKey of nestedKeys) {
-                console.log(nestedObj[nestedKey].userInfo.uid);
-                if (nestedObj[nestedKey].userInfo.uid === currentUser.uid) {
-                  updatePicInUserChats(keys[0], nestedKeys[0]);
-                  console.log("function activated");
-                }
+
+          for(const nestedKey of nestedKeys){
+            if(nestedKey.includes(currentUser.uid)){
+              if(nestedObj[nestedKey].userInfo.uid === currentUser.uid){
+                console.log(nestedKey, key)
+                updatePicInUserChats(key, nestedKey)
+                console.log("function activated");
               }
             }
           }
+
+          // if (nestedKeys[0]) {
+          //   if (nestedKeys[0].includes(currentUser.uid)) {
+          //     for (const nestedKey of nestedKeys) {
+          //       console.log(nestedObj[nestedKey].userInfo.uid);
+          //       if (nestedObj[nestedKey].userInfo.uid === currentUser.uid) {
+          //         updatePicInUserChats(keys[0], nestedKeys[0]);
+          //         console.log("function activated");
+          //       }
+          //     }
+          //   }
+          // }
         }
       }
       setLoading(false);

@@ -5,6 +5,7 @@ import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase";
 import Loader from "./loader/Loader";
 
+
 export const Messages = () => {
   const [messages, setMessages] = useState<any[]>([]);
   const { data } = useChatContext()!;
@@ -48,6 +49,7 @@ export const Messages = () => {
           </span>
         );
       })}
+       
     </div>
    </>
   );

@@ -11,7 +11,7 @@ import { toast } from "react-toastify";
 import SendPic from "./SendPic";
 
 
-const Input = () => {
+const   Input = () => {
   const [text, setText] = useState("");
   const [chatImg, setChatImg] = useState<File | null>(null);
 

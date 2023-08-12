@@ -5,8 +5,7 @@ import { useAuthContext } from "../Context/AuthContext";
 import { ChangePicture } from "./ChangePicture";
 import userPic from "../assets/user.jpg"
 import Notiflix from "notiflix";
-import { BsThreeDotsVertical } from "react-icons/bs";
-import { useChatContext } from "../Context/ChatContext";
+
 
 
 const Navbar = () => {
@@ -21,8 +20,8 @@ const Navbar = () => {
 
   const logout = () => {
     Notiflix.Confirm.show(
-      "Delete Product",
-      "You are about to delete this product?",
+      "Logout",
+      "You are about to logout?",
       "Logout",
       "Cancel",
       function okCb() {
