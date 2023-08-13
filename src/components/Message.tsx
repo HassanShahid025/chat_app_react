@@ -16,6 +16,8 @@ const Message = ({ message }: { message: any }) => {
     })
   },[message])
 
+  console.log(message.img)
+
 
   return (
     <div className={`message ${message.senderId === currentUser.uid && "owner"}`} ref={ref}>

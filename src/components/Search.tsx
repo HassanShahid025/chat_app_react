@@ -97,7 +97,7 @@ const Search = () => {
   return (
     <div className="search" >
       <div className="searchForm">
-        <AiOutlineSearch color="white" size={20} className="search-icon"/>
+        <AiOutlineSearch color="grey" size={20}  className="search-icon"/>
         <input
           type="text"
           placeholder="Find a user"

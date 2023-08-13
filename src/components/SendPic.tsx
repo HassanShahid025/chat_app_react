@@ -33,12 +33,11 @@ const SendPic = ({chatImg,text,setText,handleSend}:ISendPic) => {
       </div>
       <div className="input-contianer">
         <input type="text" placeholder="Type a message" value={text} onChange={(e) => setText(e.target.value)}/>
+        <div className="send-btn">
+          <MdSend size={30} style={{ cursor: "pointer", color:"white" }} onClick={handleSend}/>
       </div>
-      <div className="send-btn">
-        <div>
-          <MdSend size={35} style={{ cursor: "pointer", color:"white" }} onClick={handleSend}/>
-        </div>
       </div>
+      
     </div>
   );
 };

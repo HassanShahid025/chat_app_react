@@ -136,7 +136,7 @@ const Chat = () => {
         width: "320px",
         borderRadius: "8px",
         titleColor: "#5d5b8d",
-        okButtonBackground: "#5d5b8d",
+        okButtonBackground: "#8daff1",
         cssAnimationStyle: "zoom",
       }
     );
@@ -162,7 +162,7 @@ const Chat = () => {
 
                 <div className="chatContainer">
                   <div className="chatIcons" onClick={handleDropdownClick}>
-                    <BsThreeDots size={20} />
+                    <BsThreeDots size={25} color="grey"/>
                   </div>
                   {isDropdownOpen && !sendPicture &&(
                     <div className="chatDropdown">

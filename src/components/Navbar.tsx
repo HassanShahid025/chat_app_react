@@ -34,7 +34,7 @@ const Navbar = () => {
         width: "320px",
         borderRadius: "8px",
         titleColor: "#5d5b8d",
-        okButtonBackground: "#5d5b8d",
+        okButtonBackground: "#8daff1",
         cssAnimationStyle: "zoom",
       }
     );
@@ -51,7 +51,7 @@ const Navbar = () => {
           {currentUser.photoURL ? <img src={currentUser.photoURL} alt="" onClick={handleEditProfile} />: <img src={userPic}/>}
           
           <div className="user-info">
-            <p>{currentUser.displayName}</p>
+            <span>{currentUser.displayName}</span>
             <button onClick={logout}>Logout</button>
             {/* <BsThreeDotsVertical className="setting" size={90}/> */}
           </div>
