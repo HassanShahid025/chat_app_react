@@ -76,6 +76,8 @@ const Chats = () => {
       </div>
     );
   }
+
+  console.log(Object.entries(chats))
   
 
 
@@ -90,7 +92,7 @@ const Chats = () => {
               key={chat[0]}
               onClick={() => handleSelect(chat[1].userInfo)}
             >
-              {blockPhotoUrl.includes(chat[1].userInfo.photoURL) ? (
+              {blockPhotoUrl.length !== 0 && blockPhotoUrl.includes(chat[1].userInfo.photoURL) ? (
                 <img src={userPic}/>
               ) : (
                 chat[1].userInfo.photoURL ?  (
