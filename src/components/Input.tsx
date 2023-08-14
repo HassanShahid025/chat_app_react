@@ -91,10 +91,12 @@ const   Input = () => {
     
     else if(text !== "") {
       setChatImg(null)
+      const copiedText = text
+      setText("")
       await updateDoc(doc(db, "chats", data.chatId), {
         messages: arrayUnion({
           id: uuidv4(),
-          text,
+          text:copiedText,
           senderId: currentUser.uid,
           date: `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`,
           time:`${currentHours}:${currentMinutes}`       
@@ -102,13 +104,13 @@ const   Input = () => {
       }).then(() => {setText("")});
       await updateDoc(doc(db,"userChats",currentUser.uid),{
         [data.chatId + ".lastMessage"]:{
-          text,
+          text:copiedText,
         },
         [data.chatId + ".date"]: serverTimestamp()
       })
       await updateDoc(doc(db,"userChats",data.user.uid),{
         [data.chatId + ".lastMessage"]:{
-          text,
+          text:copiedText,
         },
         [data.chatId + ".date"]: serverTimestamp()
       })

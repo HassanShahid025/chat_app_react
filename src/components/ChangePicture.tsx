@@ -66,26 +66,6 @@ export const ChangePicture = ({
     setdocs(docsData);
   };
 
- 
-  // const func = () =>{
-  //   for (const obj of docs) {
-  //     const keys = Object.keys(obj);
-  //     for (const key of keys) {
-  //       const nestedObj = obj[key];
-  //       const nestedKeys = Object.keys(nestedObj);
-  //       for(const nestedKey of nestedKeys){
-  //         if(nestedKey.includes(currentUser.uid)){
-  //           if(nestedObj[nestedKey].userInfo.uid === currentUser.uid){
-  //             console.log(nestedKey, key)
-  //             updatePicInUserChats(key, nestedKey)
-  //             console.log("function activated");
-  //           }
-  //         }
-  //       }
-
-  //     }
-  //   }
-  // }
 
   // search in docs to find current user who has changed his pic
   useEffect(() => {
@@ -107,18 +87,6 @@ export const ChangePicture = ({
               }
             }
           }
-
-          // if (nestedKeys[0]) {
-          //   if (nestedKeys[0].includes(currentUser.uid)) {
-          //     for (const nestedKey of nestedKeys) {
-          //       console.log(nestedObj[nestedKey].userInfo.uid);
-          //       if (nestedObj[nestedKey].userInfo.uid === currentUser.uid) {
-          //         updatePicInUserChats(keys[0], nestedKeys[0]);
-          //         console.log("function activated");
-          //       }
-          //     }
-          //   }
-          // }
         }
       }
       setLoading(false);
